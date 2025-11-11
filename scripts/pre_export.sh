@@ -24,18 +24,21 @@ ln -sf /etc/machine-id /var/lib/dbus/machine-id
 echo "[4/7] Removing SSH host keys (they will rebuild on next boot)..."
 rm -f /etc/ssh/ssh_host_*
 
+echo "[5/8] Clearing authorized_keys for non-system accounts..."
+find /root /home -maxdepth 2 -type f -name authorized_keys -exec rm -f {} \; || true
+
 if command -v cloud-init >/dev/null 2>&1; then
-  echo "[5/7] Cleaning cloud-init state..."
+  echo "[6/8] Cleaning cloud-init state..."
   cloud-init clean --logs || cloud-init clean || true
 else
-  echo "[5/7] Skipping cloud-init cleanup (not installed)."
+  echo "[6/8] Skipping cloud-init cleanup (not installed)."
 fi
 
-echo "[6/7] Clearing shell history for root..."
+echo "[7/8] Clearing shell history for root..."
 history -c || true
 cat /dev/null > /root/.bash_history || true
 
-echo "[7/7] Syncing disks..."
+echo "[8/8] Syncing disks..."
 sync
 
 echo "Pre-export cleanup complete. Power off the VM and export the image."

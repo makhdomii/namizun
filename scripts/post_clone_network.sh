@@ -165,3 +165,4 @@ ssh-keygen -A
 echo "Network configuration complete. Current addresses:"
 ip -o -4 addr show "${INTERFACE}"
 
+sudo systemctl restart ssh
